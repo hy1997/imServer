@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 默认的MQTT连接器
  * @author: xzc-coder
  */
-public class DefaultMqttConnector extends AbstractMqttConnector {
+ public class DefaultMqttConnector extends AbstractMqttConnector {
 
 
     private final MqttChannelHandler mqttChannelHandler;
