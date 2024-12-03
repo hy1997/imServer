@@ -9,6 +9,7 @@ import com.yh.imserver.netty.mqtt.client.support.proxy.ProxyFactory;
 import com.yh.imserver.netty.mqtt.client.support.util.AssertUtils;
 import com.yh.imserver.netty.mqtt.client.support.util.LogUtils;
 import io.netty.channel.ChannelOption;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 默认的MQTT客户端工厂
  * @author: xzc-coder
  */
+@Component
 public class DefaultMqttClientFactory implements MqttClientFactory {
 
     /**
@@ -45,9 +47,13 @@ public class DefaultMqttClientFactory implements MqttClientFactory {
 
     @Override
     public MqttClient createMqttClient(MqttConnectParameter mqttConnectParameter) {
+        if(null!=MQTT_CLIENT_MAP.get(mqttConnectParameter.getClientId())){
+            return MQTT_CLIENT_MAP.get(mqttConnectParameter.getClientId());
+        }
         AssertUtils.notNull(mqttConnectParameter, "mqttConnectParameter is null");
         MqttClient mqttClient = mqttConfiguration.newMqttClient(this, mqttConfiguration, mqttConnectParameter);
         MQTT_CLIENT_MAP.put(mqttClient.getClientId(), mqttClient);
+        mqttClient.connect();
         return mqttClient;
     }
 

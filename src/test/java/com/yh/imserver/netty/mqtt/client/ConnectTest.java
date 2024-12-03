@@ -40,7 +40,8 @@ public class ConnectTest {
 
 
     @Test
-    public void testMqttConnect() {
+    public void testMqttConnect() throws IOException {
+        PropertiesUtils.loadTestProperties();
         String host = PropertiesUtils.getHost();
         int port = PropertiesUtils.getPort();
         String clientId = PropertiesUtils.getClientId();
