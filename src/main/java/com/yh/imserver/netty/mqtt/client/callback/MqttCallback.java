@@ -2,6 +2,8 @@ package com.yh.imserver.netty.mqtt.client.callback;
 
 import com.yh.imserver.netty.mqtt.client.MqttConnectParameter;
 
+import java.io.IOException;
+
 /**
  * MQTT对调接口
  */
@@ -40,7 +42,7 @@ public interface MqttCallback {
      *
      * @param receiveCallbackResult 接收消息结果
      */
-    default void messageReceiveCallback(MqttReceiveCallbackResult receiveCallbackResult) {
+    default void messageReceiveCallback(MqttReceiveCallbackResult receiveCallbackResult)  {
 
     }
 

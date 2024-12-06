@@ -13,6 +13,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @author ruoyi
  */
 @Component
+@Data
 public class TokenService
 {
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
@@ -39,7 +41,7 @@ public class TokenService
     private String header;
 
     // 令牌秘钥
-    @Value("${token.secret}")
+    @Value("${token.secret:abcdefghijklmnopqrstuvwxyz}")
     private String secret;
 
     // 令牌有效期（默认30分钟）
@@ -55,22 +57,34 @@ public class TokenService
     @Autowired
     private RedisCache redisCache;
 
+
+    public LoginUser getLoginUser(String token){
+        return getLoginUser(null, token);
+    }
+
+    public LoginUser getLoginUser(HttpServletRequest request){
+        return getLoginUser(request, null);
+    }
     /**
      * 获取用户身份信息
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser(HttpServletRequest request)
+    public LoginUser getLoginUser(HttpServletRequest request,String token)
     {
         // 获取请求携带的令牌
-        String token = getToken(request);
+        if(StringUtils.isEmpty(token)){
+            token = getToken(request);
+        }
         if (StringUtils.isNotEmpty(token))
         {
             try
             {
+                System.out.println("token:"+token);
                 Claims claims = parseToken(token);
+                System.out.println("claims:"+claims);
                 // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
+                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
                 LoginUser user = redisCache.getCacheObject(userKey);
                 return user;
@@ -191,6 +205,7 @@ public class TokenService
      */
     private Claims parseToken(String token)
     {
+        System.out.println("secret:"+secret);
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)

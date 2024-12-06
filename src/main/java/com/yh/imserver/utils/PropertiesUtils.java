@@ -65,7 +65,7 @@ public class PropertiesUtils {
     public static void loadTestProperties() throws IOException {
         String path = PropertiesUtils.class.getClassLoader().getResource("").getPath();
         path = path + File.separator + TEST_NAME;
-        properties.load(Files.newInputStream(new File("D:\\IdeaProjects\\im-server\\src\\test\\java\\com\\yh\\imserver\\netty\\mqtt\\client\\util\\test.properties").toPath()));
+        properties.load(Files.newInputStream(new File("D:\\IdeaProjects\\im-server\\src\\main\\resources\\test.properties").toPath()));
     }
 
 }
